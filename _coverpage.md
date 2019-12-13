@@ -5,7 +5,7 @@
 > A magical workshop.
 
 - Simple labs that fits all levels
-- Written with love
+- Written with love...
 
 [Get Started](init.md)
 
