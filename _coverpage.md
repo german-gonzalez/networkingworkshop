@@ -2,7 +2,7 @@
 
 # Networking Workshop <small>0.1</small>
 
-> A magical workshop.
+> A magical workshop. built by perry and german
 
 - Simple labs that fits all levels
 - Written with love...
