@@ -1,8 +1,8 @@
-![logo](_media/logo256.png)
+![logo](_media/awslogo.png)
 
 # Networking Workshop <small>0.1</small>
 
-> A magical workshop. built by perry and german
+> Transit Gateway and Traffic Mirroring - Labs and Instructions
 
 - Simple labs that fits all levels
 - Written with love...
@@ -11,4 +11,4 @@
 
 <!-- background color -->
 
-![color](#ffffff)
+![color](#161E2D)
