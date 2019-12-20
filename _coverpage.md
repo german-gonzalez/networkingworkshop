@@ -1,4 +1,4 @@
-![logo](_media/AWSlogo.png)
+![logo](_media/AWSlogo_blk.png)
 
 # Networking Workshop <small>0.1</small>
 
@@ -11,4 +11,4 @@
 
 <!-- background color -->
 
-![color](#161E2D)
+![color](#ffffff)
