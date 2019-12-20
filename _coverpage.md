@@ -1,4 +1,4 @@
-![logo](_media/awslogo.png)
+![logo](_media/AWSlogo.png)
 
 # Networking Workshop <small>0.1</small>
 
