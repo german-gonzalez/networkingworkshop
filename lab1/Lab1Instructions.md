@@ -1,6 +1,6 @@
 # Intructions for Lab 1
 
-![Lab1 Architecture](diagrams/lab1.png)
+![Lab1 Architecture](img/lab1.png)
 
 ## Preparing the environment
 

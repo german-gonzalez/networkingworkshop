@@ -1,10 +1,10 @@
 - [Welcome](init.md)
 - Lab 1 - Building a transit gateway
 
-  - [Overview](lab1/overview.md)
-  - [Preparing the environment](lab1/prep.md)
-  
+  - [Lab 1 Instructions](lab1/Lab1Instructions.md)
+
 - Interconnect VPCs
+  - [Preparing the environment](lab1/prep.md)
 
   - [Create a Transit Gateway](2-excercise-1/CreateTGW.md)
   - [Attach your VPCs](2-excercise-1/AttachVPCs.md)
