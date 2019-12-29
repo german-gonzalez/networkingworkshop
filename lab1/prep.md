@@ -1,5 +1,3 @@
-## Preparing the environment
-
 ### 1. Create a keypair in eu-west-1, account 1
 
 You wont need the keypair unless you want to ssh directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
