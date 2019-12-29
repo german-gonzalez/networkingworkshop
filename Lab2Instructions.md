@@ -26,7 +26,7 @@ Unless you already have used the name, give this keypair the name `KeyPair2` to 
 
 Launch template `Lab2_Region1Acct2.yaml` and use the default entries. If you have not named your keypair `KeyPair2` then change this parameter so it matches the name you provided.
 
-To download the cloudformation template for setting up lab 2, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab1_Region1Acct1.yaml)
+To download the cloudformation template for setting up lab 2, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab2_Region1Acct2.yaml)
 
 ### 3. Checking the launched stack
 

@@ -1,10 +1,13 @@
 # Intructions for Lab 4
 
-![Lab4 Architecture](diagrams/lab4.png)
+In this lab, we will look at how to peer two transit gateways together in different regions.
+
+![Lab4 Architecture](img/lab4.png)
 
 ## Preparing the environment
 
-This lab is being run in the first account you used, but split between eu-west-1 and us-east-1. Make sure that you check you are in the correct region as you run each section.
+> [!DANGER]
+>This lab is being run in the first account you used, but split between eu-west-1 and us-east-1. Make sure that you check you are in the correct region as you run each section.
 
 ### 1. Create a keypair in us-east-1, account 1
 
@@ -20,9 +23,14 @@ To find the profile, go to the cloudformation stack in the first region, that yo
 
 ### 3. Launch the cloudformation template
 
-Launch template `Lab4_Region2Acct1.yaml` and use the default entries, bearing in mind the following items.
+> [DANGER]
+> Make sure you launch the template in **us-east-1**, not in **eu-west-1**
 
-* Make sure you launch it in **us-east-1**, not in **eu-west-1**
+Launch template `Lab4_Region2Acct1.yaml` and use the default entries, bearing in mind the items below.
+
+To download the cloudformation template for setting up lab 4, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab4_Region2Acct1.yaml)
+
+
 * If you have not named your keypair `KeyPair3` then change this parameter so it matches the name you provided.
 * Paste in the name of the SSM profile that you found from the cloudformation output in Lab 1. **Note: you are looking for the profile, not the role.**
 
