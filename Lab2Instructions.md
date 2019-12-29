@@ -4,10 +4,10 @@ In Lab 2, we will be adding another VPC, but from a different account
 
 ![Lab2 Architecture](img/lab2.png)
 
-> [!DANGER]
-> Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
-> 
-> Otherwise, you may find that when you log into account 2, it changes the account that all browsers in that session are logged in to. Keep an eye out for this!!!
+
+Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
+
+Otherwise, you may find that when you log into account 2, it changes the account that all browsers in that session are logged in to. Keep an eye out for this!!!
 
 ---
 
@@ -47,6 +47,9 @@ Nothing should be able to reach the instance in the `10.1.1.0/24` range, and lik
 ---
 
 ## Extending the transit gateway to the new VPC in a different account
+
+> [!TIP]
+> You will now be swapping between accounts 1 and 2. Pay attention to which account you are in as you go through the steps. 
 
 ### 1. Share the transit gateway
 
