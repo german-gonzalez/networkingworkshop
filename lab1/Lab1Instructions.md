@@ -1,4 +1,6 @@
-# Intructions for Lab 1
+## Overview of architecture
+
+In lab 1 we will be deploying a transit gateway, and linking two VPCs together, as shown in the diagram below:
 
 ![Lab1 Architecture](img/lab1.png)
 
@@ -66,3 +68,4 @@ If the lab is working correctly, then everything should be able to ping everythi
 If you have tried to create the transit gateway,and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, transit gateway, aattachments, and cloudformation stack) and then run a single cloudformation template which will create the entire lab, including all transit gateway components.
 
 This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. 
+

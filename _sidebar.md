@@ -1,7 +1,7 @@
 - [Welcome](init.md)
-- Lab 1 - Building a transit gateway
+- Lab 1
 
-  - [Lab 1 Instructions](lab1/Lab1Instructions.md)
+  - [Building a transit gateway](lab1/Lab1Instructions.md)
 
 - Interconnect VPCs
   - [Preparing the environment](lab1/prep.md)
