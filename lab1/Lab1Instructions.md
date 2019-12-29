@@ -16,6 +16,8 @@ Unless you already have used the name, give this keypair the name `KeyPair` to m
 
 Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
 
+To download the cloudformation template, right click on ![this link](cfn/Lab1_Region1Acct1.yaml) and save the file as `Lab1_Region1Acct1.yaml`
+
 ### 3. Checking the launched stack
 
 Once complete, check the following:
