@@ -1,14 +1,20 @@
-# Intructions for Lab 2
+## Overview of architecture
 
-![Lab2 Architecture](diagrams/lab2.png)
+In Lab 2, we will be adding another VPC, but from a different account
 
-Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
+![Lab2 Architecture](img/lab2.png)
 
-Otherwise, you may find that when you log into account 2, it changes the account that all browsers in that session are logged in to. Keep an eye out for this!!!
+> [!DANGER]
+> Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
+> 
+> Otherwise, you may find that when you log into account 2, it changes the account that all browsers in that session are logged in to. Keep an eye out for this!!!
 
 ---
 
 ## Preparing the environment
+
+> [!DANGER]
+> You should now be working in account 2
 
 ### 1. Create a keypair in eu-west-1, account 2
 
@@ -19,6 +25,8 @@ Unless you already have used the name, give this keypair the name `KeyPair2` to 
 ### 2. Launch the cloudformation template
 
 Launch template `Lab2_Region1Acct2.yaml` and use the default entries. If you have not named your keypair `KeyPair2` then change this parameter so it matches the name you provided.
+
+To download the cloudformation template for setting up lab 2, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab1_Region1Acct1.yaml)
 
 ### 3. Checking the launched stack
 
