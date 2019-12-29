@@ -1,7 +1,3 @@
-# TKONetworkingGym - Useful links and commands
-
- ## Session manager help
-
 ### Installing the plug-in if you want to use from the command line
 
 Instead of using the browser to connect to each session, its possible to do so straight from the command line. However, you will need the plug-in installed first, which can be found here.
