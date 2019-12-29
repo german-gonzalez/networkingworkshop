@@ -1,0 +1,256 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The template creates the VPC and transit gateway for the networking master account, second
+  region, so that you can test transit gateway peering.
+
+
+Parameters:
+
+  KeyPairName:
+    Description: Pre-existing SSH Keypair name used to access EC2 instances by default
+    Type: String
+    Default: 'KeyPair3'
+    AllowedPattern: .+
+
+  PrivateVPC3Name:
+    Description: Default name for the first private VPC
+    Type: String
+    Default: 'PrivateVPC3'
+
+  PrivateVPC3InstanceIP:
+    Description: Default private IP address for NAT instance
+    Type: String
+    Default: '10.2.1.100'
+
+  SSMInstanceProfile:
+    Description: SSM instance role created in previous cloudformation script
+    Type: String
+    AllowedPattern: .+
+
+Mappings: 
+  InstanceMap: 
+    us-east-1: 
+      NAT: 'ami-00a9d4a05375b2763'
+      AL2: 'ami-00068cd7555f543d5'
+    eu-west-1: 
+      NAT: 'ami-0236d0cbbbe64730c'
+      AL2: 'ami-01f14919ba412de34'
+
+
+Resources:
+
+#Create SSM role
+
+#PrivateVPC3 vpc and subnet creation
+
+  PrivateVPC3:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.2.0.0/16
+      EnableDnsHostnames: Yes
+      Tags:
+        - Key: Name
+          Value: !Ref PrivateVPC3Name
+
+  PrivateVPC3Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref PrivateVPC3
+      CidrBlock: 10.2.1.0/24
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateVPC3Subnet, !Ref PrivateVPC3Name]]
+
+# SSM endpoints creation
+
+  PrivateVPC3SSMEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds:
+        - !GetAtt PrivateVPC3.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssm']]
+      SubnetIds:
+        - !Ref PrivateVPC3Subnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref PrivateVPC3
+
+  PrivateVPC3SSMMSGEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds:
+        - !GetAtt PrivateVPC3.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssmmessages']]
+      SubnetIds:
+        - !Ref PrivateVPC3Subnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref PrivateVPC3
+
+  PrivateVPC3RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref PrivateVPC3
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateVPC3RT, !Ref PrivateVPC3Name]]
+
+  PrivateVPC3SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateVPC3Subnet1
+      RouteTableId: !Ref PrivateVPC3RouteTable
+
+# security group for http, https and ICMP
+
+  PrivateVPC3WebPingSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG to allow http, https and ping
+      VpcId: !Ref 'PrivateVPC3'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: icmp
+          CidrIp: 10.0.0.0/8
+          FromPort: '-1'
+          ToPort: '-1'
+        - IpProtocol: icmp
+          CidrIp: 192.168.0.0/16
+          FromPort: '-1'
+          ToPort: '-1'
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref PrivateVPC3Name, WebPingSG]]
+
+# PrivateVPC3 subnet test instance creation
+
+  PrivateVPC3SubnetTestInstance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - PrivateVPC3SSMEndPoint
+      - PrivateVPC3SSMMSGEndPoint
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - AL2
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: PrivateVPC3Subnet-TestInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: No
+        DeleteOnTermination: Yes
+        Description: Primary network interface
+        DeviceIndex: 0
+        PrivateIpAddress: !Ref PrivateVPC3InstanceIP
+        SubnetId: !Ref PrivateVPC3Subnet1
+        GroupSet:
+          - !Ref PrivateVPC3WebPingSecurityGroup
+          - !GetAtt PrivateVPC3.DefaultSecurityGroup
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+####################################################################################################
+# Additional cfn code to create a transit gateway, and associate the links, and update route tables. 
+# Remove the entire section between the hash lines if you want to get to the original template
+
+  TransitGateway:
+    Type: AWS::EC2::TransitGateway
+    Properties:
+      AmazonSideAsn: 65001
+      AutoAcceptSharedAttachments: enable
+      DefaultRouteTableAssociation: disable
+      DefaultRouteTablePropagation: disable
+      Description: A transit gateway to support connectivity between VPCs
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [TGW, !Ref 'AWS::Region']]
+
+  PrimaryRouteTable:
+    Type: "AWS::EC2::TransitGatewayRouteTable"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [MainRouteTable, !Ref 'AWS::Region']]
+      TransitGatewayId: !Ref TransitGateway
+
+  VPC2Attachment:
+    Type: AWS::EC2::TransitGatewayAttachment
+    Properties:
+      SubnetIds:
+        - !Ref PrivateVPC3Subnet1
+      Tags:
+        - Key: Name
+          Value: PrivateVPC3-Attachment
+      TransitGatewayId: !Ref TransitGateway
+      VpcId: !Ref PrivateVPC3
+  
+  VPC2RouteTGWP:
+    Type: AWS::EC2::TransitGatewayRoute
+    Properties:
+      DestinationCidrBlock: 10.2.0.0/16
+      TransitGatewayAttachmentId: !Ref VPC2Attachment
+      TransitGatewayRouteTableId: !Ref PrimaryRouteTable
+
+  VPC2Association:
+    Type: AWS::EC2::TransitGatewayRouteTableAssociation
+    Properties:
+      TransitGatewayAttachmentId: !Ref VPC2Attachment
+      TransitGatewayRouteTableId: !Ref PrimaryRouteTable
+
+  UpdateVPC2RouteTable:
+    Type: AWS::EC2::Route
+    DependsOn: VPC2Attachment
+    Properties:
+       RouteTableId: !Ref PrivateVPC3RouteTable
+       DestinationCidrBlock: 0.0.0.0/0
+       TransitGatewayId: !Ref TransitGateway
+
+#Remove everything to here to get back to the orgiginal template
+####################################################################################################
+
+
+
+
+Outputs:
+  StackName:
+    Value: !Ref AWS::StackName
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', PrimaryStack]]
+  VPC2Name:
+    Value: !Ref PrivateVPC3
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC2]]
+  VPC2SubnetName:
+    Value: !Ref PrivateVPC3Subnet1
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC2Subnet]]
+  VPC2RTName:
+    Value: !Ref PrivateVPC3RouteTable
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC2RouteTable]]
+  

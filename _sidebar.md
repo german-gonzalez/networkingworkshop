@@ -1,8 +1,9 @@
 - [Welcome](init.md)
-- Getting started
+- Lab 1 - Building a transit gateway
 
-  - [Lab Overview](1-getting-started/LabOverview.md)
-  - [Launch CF Template](1-getting-started/LaunchCF.md)
+  - [Overview](lab1/overview.md)
+  - [Preparing the environment](lab1/prep.md)
+  
 - Interconnect VPCs
 
   - [Create a Transit Gateway](2-excercise-1/CreateTGW.md)

@@ -1,0 +1,627 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The template creates the base VPCs for the networking gym master account.
+
+  It also contains the cfn for creating the transit gateway, but this is commented out so that it can be 
+  created manually.
+
+  At the end of this template, we should have the following items
+
+    1. a role for SSM management
+    2. a boundary VPC with 
+      - two subnets, being a public and private one
+      - an IGW
+      - a NAT instance, based on a nitro instance type
+      - a pair of testing instances, one in each subnet
+      - security groups to allow https, http, ping from all other test instances
+      - ssm management endpoints (ssm and ssmmessges)
+    3. a private VPC with
+      - a single subnet
+      - a single testing instance
+      - security groups to allow https, http and ping to other instances
+      - ssm management endpoints (ssm and ssmmessges)
+
+
+Parameters:
+
+  KeyPairName:
+    Description: Pre-existing SSH Keypair name used to access EC2 instances by default
+    Type: String
+    Default: 'KeyPair'
+    AllowedPattern: .+
+
+  NATVPCName:
+    Description: Default name for the NAT vpc
+    Type: String
+    Default: 'BoundaryVPC'
+
+  PrivateVPC1Name:
+    Description: Default name for the first private VPC
+    Type: String
+    Default: 'PrivateVPC1'
+
+  NATInstanceIP:
+    Description: Default private IP address for NAT instance
+    Type: String
+    Default: '192.168.1.200'
+
+  NATPrivateInstanceIP:
+    Description: Default private IP address for NAT instance
+    Type: String
+    Default: '192.168.2.100'
+
+  NATPublicInstanceIP:
+    Description: Default private IP address for NAT instance
+    Type: String
+    Default: '192.168.1.100'
+
+  PrivateVPC1InstanceIP:
+    Description: Default private IP address for NAT instance
+    Type: String
+    Default: '10.0.1.100'
+
+  MirrorInstanceIPPrimary:
+    Description: Default private IP address for traffic mirror target primary interface
+    Type: String
+    Default: '192.168.2.111'
+
+
+Mappings: 
+  InstanceMap: 
+    us-east-1: 
+      NAT: 'ami-00a9d4a05375b2763'
+      AL2: 'ami-00068cd7555f543d5'
+    eu-west-1: 
+      NAT: 'ami-0236d0cbbbe64730c'
+      AL2: 'ami-01f14919ba412de34'
+
+
+Resources:
+
+#Create SSM role
+
+  SSMInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+  SSMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Roles: 
+        - !Ref SSMInstanceRole
+
+#NAT vpc and subnet creation
+
+  NATVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/16
+      EnableDnsHostnames: Yes
+      Tags:
+        - Key: Name
+          Value: !Ref NATVPCName
+
+  PublicNATSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref NATVPC
+      CidrBlock: 192.168.1.0/24
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: Yes
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PublicNATSubnet, !Ref NATVPCName]]
+
+  PrivateNATSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref NATVPC
+      CidrBlock: 192.168.2.0/24
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateNATSubnet, !Ref NATVPCName]]
+
+# IGW creation
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [IGW, !Ref NATVPCName]]
+
+  AttachIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref NATVPC
+      InternetGatewayId: !Ref InternetGateway
+
+# SSM endpoints creation
+
+  SSMEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds: 
+        - !GetAtt NATVPC.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssm']]
+      SubnetIds: 
+        - !Ref PrivateNATSubnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref NATVPC
+
+  SSMMSGEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds: 
+        - !GetAtt NATVPC.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssmmessages']]
+      SubnetIds: 
+        - !Ref PrivateNATSubnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref NATVPC
+
+  PublicNATRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref NATVPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PublicNATRT, !Ref NATVPCName]]
+ 
+  PrivateNATRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref NATVPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateNATRT, !Ref NATVPCName]]
+
+  IGWRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachIGW
+    Properties:
+      RouteTableId: !Ref PublicNATRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref 'InternetGateway'
+ 
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicNATSubnet1
+      RouteTableId: !Ref PublicNATRouteTable
+
+  NATInstanceRoute:
+    Type: AWS::EC2::Route
+    DependsOn: NATInstance
+    Properties:
+      RouteTableId: !Ref PrivateNATRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      InstanceId: !Ref NATInstance
+
+  PrivateSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateNATSubnet1
+      RouteTableId: !Ref PrivateNATRouteTable
+
+# security group for http, https and ICMP
+
+  NATWebPingSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG to allow http, https and ping
+      VpcId: !Ref 'NATVPC'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: icmp
+          CidrIp: 10.0.0.0/8
+          FromPort: '-1'
+          ToPort: '-1'
+        - IpProtocol: icmp
+          CidrIp: 192.168.0.0/16
+          FromPort: '-1'
+          ToPort: '-1'
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref NATVPCName, WebPingSG]]
+
+# NAT instance creation
+
+  NATInstanceInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: ENI for use by NAT interface
+      SubnetId: !Ref PublicNATSubnet1
+      GroupSet: 
+        - !Ref NATWebPingSecurityGroup
+        - !GetAtt NATVPC.DefaultSecurityGroup
+      SourceDestCheck: No
+      PrivateIpAddress: !Ref NATInstanceIP
+      Tags:
+        - Key: Name
+          Value: NATInstanceENI
+
+  NATInstancePublicIP:
+    Type: AWS::EC2::EIP
+    Properties: 
+      Domain: vpc
+      Tags: 
+        - Key: Name
+          Value: NATPublicIP
+
+  NATInstancePublicIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    DependsOn:
+      - NATInstanceInterface
+      - NATInstancePublicIP
+    Properties: 
+      AllocationId: !GetAtt NATInstancePublicIP.AllocationId
+      NetworkInterfaceId: !Ref NATInstanceInterface
+
+  NATInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: 
+      - AttachIGW
+      - SSMInstanceRole
+      - SSMEndPoint
+      - SSMMSGEndPoint
+      - NATInstancePublicIPAssociation
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - NAT
+      InstanceType: t3.micro
+      Tags:
+        - Key: Name
+          Value: PublicNATInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - Description: Primary network interface
+        DeviceIndex: 0
+        NetworkInterfaceId: !Ref NATInstanceInterface
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+# NAT Private subnet test instance creation
+
+  PrivateSubnetNATTestInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: 
+      - AttachIGW
+      - SSMInstanceRole
+      - SSMEndPoint
+      - SSMMSGEndPoint
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - AL2
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: PrivateNATSubnet-TestInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: No
+        DeleteOnTermination: Yes
+        Description: Primary network interface
+        DeviceIndex: 0
+        PrivateIpAddress: !Ref NATPrivateInstanceIP
+        SubnetId: !Ref PrivateNATSubnet1
+        GroupSet: 
+          - !Ref NATWebPingSecurityGroup
+          - !GetAtt NATVPC.DefaultSecurityGroup
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+# NAT Public subnet test instance creation
+
+  PublicSubnetNATTestInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: 
+      - AttachIGW
+      - SSMInstanceRole
+      - SSMEndPoint
+      - SSMMSGEndPoint
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - AL2
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: PublicNATSubnet-TestInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: No
+        DeleteOnTermination: Yes
+        Description: Primary network interface
+        DeviceIndex: 0
+        PrivateIpAddress: !Ref NATPublicInstanceIP
+        SubnetId: !Ref PublicNATSubnet1
+        GroupSet: 
+          - !Ref NATWebPingSecurityGroup
+          - !GetAtt NATVPC.DefaultSecurityGroup
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+# Traffic mirror target instance creation - living in private subnet of boundary VPC
+
+  TrafficMirrorTargetInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: Traffic mirror target network interface
+      SubnetId: !Ref PrivateNATSubnet1
+      GroupSet: 
+        - !GetAtt NATVPC.DefaultSecurityGroup
+      Tags:
+        - Key: Name
+          Value: TargetTrafficMirrorENI
+
+  TrafficMirrorInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: 
+      - AttachIGW
+      - SSMInstanceRole
+      - SSMEndPoint
+      - SSMMSGEndPoint
+      - TrafficMirrorTargetInterface
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - AL2
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: TrafficMirrorTargetInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - DeleteOnTermination: Yes
+        Description: Primary network interface
+        DeviceIndex: 0
+        PrivateIpAddress: !Ref MirrorInstanceIPPrimary
+        SubnetId: !Ref PrivateNATSubnet1
+        GroupSet: 
+          - !GetAtt NATVPC.DefaultSecurityGroup
+      - DeviceIndex: 1
+        NetworkInterfaceId: !Ref TrafficMirrorTargetInterface
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+
+
+#PrivateVPC1 vpc and subnet creation
+
+  PrivateVPC1:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: Yes
+      Tags:
+        - Key: Name
+          Value: !Ref PrivateVPC1Name
+
+  PrivateVPC1Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref PrivateVPC1
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateVPC1Subnet, !Ref PrivateVPC1Name]]
+
+# SSM endpoints creation
+
+  PrivateVPC1SSMEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds:
+        - !GetAtt PrivateVPC1.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssm']]
+      SubnetIds:
+        - !Ref PrivateVPC1Subnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref PrivateVPC1
+
+  PrivateVPC1SSMMSGEndPoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      PrivateDnsEnabled: Yes
+      SecurityGroupIds:
+        - !GetAtt PrivateVPC1.DefaultSecurityGroup
+      ServiceName: !Join ['.', ['com.amazonaws',!Ref 'AWS::Region','ssmmessages']]
+      SubnetIds:
+        - !Ref PrivateVPC1Subnet1
+      VpcEndpointType: Interface
+      VpcId: !Ref PrivateVPC1
+
+  PrivateVPC1RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref PrivateVPC1
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [PrivateVPC1RT, !Ref PrivateVPC1Name]]
+
+  PrivateVPC1SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateVPC1Subnet1
+      RouteTableId: !Ref PrivateVPC1RouteTable
+
+# security group for http, https and ICMP
+
+  PrivateVPC1WebPingSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG to allow http, https and ping
+      VpcId: !Ref 'PrivateVPC1'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '80'
+          ToPort: '80'
+        - IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: tcp
+          CidrIp: 192.168.0.0/16
+          FromPort: '443'
+          ToPort: '443'
+        - IpProtocol: icmp
+          CidrIp: 10.0.0.0/8
+          FromPort: '-1'
+          ToPort: '-1'
+        - IpProtocol: icmp
+          CidrIp: 192.168.0.0/16
+          FromPort: '-1'
+          ToPort: '-1'
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref PrivateVPC1Name, WebPingSG]]
+
+# PrivateVPC1 subnet test instance creation
+
+  PrivateVPC1SubnetTestInstance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - SSMInstanceRole
+      - PrivateVPC1SSMEndPoint
+      - PrivateVPC1SSMMSGEndPoint
+    Properties:
+      ImageId: !FindInMap
+        - InstanceMap
+        - !Ref AWS::Region
+        - AL2
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: PrivateVPC1Subnet-TestInstance
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: '8'
+            VolumeType: gp2
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: No
+        DeleteOnTermination: Yes
+        Description: Primary network interface
+        DeviceIndex: 0
+        PrivateIpAddress: !Ref PrivateVPC1InstanceIP
+        SubnetId: !Ref PrivateVPC1Subnet1
+        GroupSet:
+          - !Ref PrivateVPC1WebPingSecurityGroup
+          - !GetAtt PrivateVPC1.DefaultSecurityGroup
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      KeyName: !Ref KeyPairName
+
+##tgw section is added here
+
+
+
+Outputs:
+  StackName:
+    Value: !Ref AWS::StackName
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', PrimaryStack]]
+  SSMRole:
+    Value: !Ref SSMInstanceRole
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', SSMRole]]
+  SSMProfile:
+    Value: !Ref SSMInstanceProfile
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', SSMProfile]]
+  NATVPCName:
+    Value: !Ref NATVPC
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', NATVPC]]
+  NATPrivateSubnetName:
+    Value: !Ref PrivateNATSubnet1
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', NATPrivateSubnet]]
+  NATPublicRTName:
+    Value: !Ref PublicNATRouteTable
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', NATPublicRouteTable]]
+  VPC1Name:
+    Value: !Ref PrivateVPC1
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC1]]
+  VPC1SubnetName:
+    Value: !Ref PrivateVPC1Subnet1
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC1Subnet]]
+  VPC1RTName:
+    Value: !Ref PrivateVPC1RouteTable
+    Export: 
+      Name: !Join ['-', [!Ref 'AWS::StackName', VPC1RouteTable]]
+#  TrafficMirrorInstanceName:
+#    Value: !Ref TrafficMirrorInstance
+#  TrafficMirrorTargetInterface:
+#    Value: !Ref TrafficMirrorTargetInterface
+
+  
