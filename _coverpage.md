@@ -4,8 +4,8 @@
 
 > Transit Gateway and Traffic Mirroring - Labs and Instructions
 
-- Simple labs that fits all levels
-- Written with love...
+- A 200-level lab that helps you understand routing and the transit gateway
+- Written and presented by Perry Wald and German Gonzalez Zapata
 
 [Get Started](init.md)
 
