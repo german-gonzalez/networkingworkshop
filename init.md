@@ -1,4 +1,4 @@
-## Networking Workshop
+# Networking Workshop
 
 This workshop is intended to deploy the following items during the 5 labs
 
