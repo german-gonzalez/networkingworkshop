@@ -46,7 +46,7 @@ Nothing should be able to reach the instance in the `10.1.1.0/24` range, and lik
 
 ---
 
-## Extending the transit gateway to the new VPC in a different account
+## Extending the TGW to the new VPC
 
 > [!TIP]
 > You will now be swapping between accounts 1 and 2. Pay attention to which account you are in as you go through the steps. 
