@@ -10,7 +10,8 @@ Note that you are now going to be working mostly back in the first account, and 
 
 ## Preparing the environment
 
-As long as lab 2 is working successfully for you, then there is no preparation for lab 3
+> [!TIP]
+> As long as lab 2 is working successfully for you, then there is no preparation for lab 3
 
 ## Moving to a hub and spoke architecture
 
