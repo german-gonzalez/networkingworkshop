@@ -11,6 +11,9 @@
 
   - [Moving to a hub and spoke desgin](Lab3Instructions.md)
 
+- Lab 4
+
+  - [Peering with a second region](Lab4Instructions.md)
 
 - Example page
   - [Here is an example](example.md)
