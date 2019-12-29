@@ -1,6 +1,6 @@
-# Intructions for Lab 3
+## Overiview of architecture
 
-![Lab3 Architecture](diagrams/lab3.png)
+![Lab3 Architecture](img/lab3.png)
 
 Note that you are now going to be working mostly back in the first account, and will only be using the second account for testing. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
 
