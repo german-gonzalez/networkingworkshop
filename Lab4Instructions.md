@@ -1,4 +1,4 @@
-# Intructions for Lab 4
+## Overiview of architecture
 
 In this lab, we will look at how to peer two transit gateways together in different regions.
 
@@ -48,7 +48,7 @@ The instance should not be able to reach any others, nor communicate with the In
 
 ---
 
-## Peering the transit gateways between the regions
+## Peering the TGWs between the regions
 
 ### 1. Create the transit gateway peer attachment
 

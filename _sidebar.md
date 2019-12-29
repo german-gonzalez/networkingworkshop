@@ -15,6 +15,11 @@
 
   - [Peering with a second region](Lab4Instructions.md)
 
+- Lab 5
+
+  - [Packet Inspection with Traffic Mirroring](Lab5Instructions.md)
+  
+
 - Example page
   - [Here is an example](example.md)
 

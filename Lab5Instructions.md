@@ -1,8 +1,11 @@
-# Intructions for Lab 5
+## Overiview of architecture
 
-![Lab5 Architecture](diagrams/lab5.png)
+In this lab we look at mirroring traffic that is coming in/out of the NAT instance, so that we can emulate packet tracing of all packets using the NAT function to get out to the internet.
 
-Note that you are now going to be working  back in the first account in **eu-west-1**. You can do all testing from instances within that region and account. We are testing traffic mirroring in this lab, and do not really need to worry about other VPCs or regions. All testing can be done with just the intances in the `192.168.0.0/16` boudary VPC
+![Lab5 Architecture](img/lab5.png)
+
+>[!TIP]
+>Note that you are now going to be working  back in the first account in **eu-west-1**. You can do all testing from instances within that region and account. We are testing traffic mirroring in this lab, and do not really need to worry about other VPCs or regions. All testing can be done with just the intances in the `192.168.0.0/16` boudary VPC
 
 ---
 
