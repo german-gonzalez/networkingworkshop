@@ -19,4 +19,11 @@
 
   - [Packet Inspection with Traffic Mirroring](Lab5Instructions.md)
 
+- Additional Material
+
+  - [Useful links for SSM](UsefulLinks.md)
+  - [SQL commands for Flow Logs](SQLAthena.md)
+  - [Testing matrix](testingmatrix.md)
+
+
 

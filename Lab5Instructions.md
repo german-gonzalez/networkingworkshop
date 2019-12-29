@@ -1,4 +1,4 @@
-## Overiview of architecture
+## Overview of architecture
 
 In this lab we look at mirroring traffic that is coming in/out of the NAT instance, so that we can emulate packet tracing of all packets using the NAT function to get out to the internet.
 

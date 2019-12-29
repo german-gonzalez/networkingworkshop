@@ -1,4 +1,4 @@
-## Overiview of architecture
+## Overview of architecture
 
 In this lab, we will look at how to peer two transit gateways together in different regions.
 

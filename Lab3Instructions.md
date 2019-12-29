@@ -1,4 +1,4 @@
-## Overiview of architecture
+## Overview of architecture
 
 In Lab 3 we will be moving from a mesh architecture, where all VPCs can talk to one another, to a hub and spoke architecture, where several spoke VPCs can talk to a hub VPC, but not to each other.
 
