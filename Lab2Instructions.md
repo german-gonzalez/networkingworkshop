@@ -28,6 +28,8 @@ Launch template `Lab2_Region1Acct2.yaml` and use the default entries. If you hav
 
 To download the cloudformation template for setting up lab 2, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab2_Region1Acct2.yaml)
 
+To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/4529801924a0bbaa89b0c550865c1d773b679cb1e4691335b9fbc59f15ea1372)
+
 ### 3. Checking the launched stack
 
 Once complete, check the following:

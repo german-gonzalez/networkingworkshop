@@ -30,6 +30,7 @@ Launch template `Lab4_Region2Acct1.yaml` and use the default entries, bearing in
 
 To download the cloudformation template for setting up lab 4, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab4_Region2Acct1.yaml)
 
+To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/d9911eac05eeb217ec174cd141b1bb4fffb40777b9986f3a2b2b978882e12e07)
 
 * If you have not named your keypair `KeyPair3` then change this parameter so it matches the name you provided.
 * Paste in the name of the SSM profile that you found from the cloudformation output in Lab 1. **Note: you are looking for the profile, not the role.**
