@@ -62,6 +62,13 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 * Either propagate both attachments to that route table, or enter routes in the table for the appropriate VPC CIDR ranges
 * Add a **default route** to the transit gateway route table, pointing to the boundary VPC attachment
 
+> [!TIP]
+> A default route is a route entry that tells a routing table 'if you don't have a specific match for this packet, then send it on this way'. The standard way of expressing a default route in IP is to set the route to 0.0.0.0/0, and point this towards the next hop where you want the packet to go.
+
+> 0.0.0.0/0 means match with any possible address.
+
+> It is important to remember that a routing table will always match to the most specific route first. The order of the routes in a routing table is usually just in numerical sequence, and the routing decision is based on which route has the best match. This does mean that when routing tables get quite large, a lot of checking has to be done, since every entry has to be validated, at least the first time a packet is routed.
+
 ### 4. Update VPC route tables
 
 * Add a **default route** to the Private VPC route table, pointing to the transit gateway
