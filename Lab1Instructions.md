@@ -34,6 +34,12 @@ All instances in the `192.168.0.0/16` range should be able to ping one another, 
 
 Also, the `curl` command should work from all instances except `192.168.1.100` and `10.0.1.100`
 
+> [DANGER]
+> Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a nitro card to act as source. 
+
+> We have put an instance in the public subnet purely to act as a testing point...something you can ping from. This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
+
+
 ---
 
 ## Building the transit gateway
