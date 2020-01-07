@@ -85,3 +85,5 @@ If the lab is working correctly, then everything should be able to ping instance
 
 As before `192.168.1.100` should not be able to reach the Internet, and instances in the `10.0.0.0/8` ranges should not be able to ping one another.
 
+> [!DANGER]
+> If you were unable to complete lab3 successfully, then it may be that instances in the `10.0.0.0/16` and `10.1.0.0/16` networks can still talk to each other. That's fine, it just means you need to expect that to be different from the testing matrix results. The aim of this lab is to set up inter-region peering and prove that you can reach the NAT instance from the second region.
