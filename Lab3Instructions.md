@@ -41,7 +41,7 @@ In order to move from a mesh to a hub and spoke architecture, we will need to cr
 
 ### 4. Test everything
 
-Use the same matrix as before, and log into each instance using session manager (in both accounts), and see what can ping to what, and which instances are able to reach the internet.
+Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using session manager (in both accounts), and see what can ping to what, and which instances are able to reach the internet.
 
 If the lab is working correctly, then everything should be able to ping instances in the `192.168.0.0/16` range, and private VPCs (and `192.168.2.100`) should be able to connect to the Internet
 
