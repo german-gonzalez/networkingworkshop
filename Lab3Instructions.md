@@ -31,7 +31,7 @@ In order to move from a mesh to a hub and spoke architecture, we will need to cr
 
 * Add a default route into the `boundary_access` route table so that packets coming in from the private VPCs, with destinations on the Internet, know to be forwarded via the NAT gateway
 
-*Add a **blackhole route** to the `boundary_access` route table, so that packets coming from one of the private VPCs with a destination of the other private VPC are dropped.
+* Add a **blackhole route** to the `boundary_access` route table, so that packets coming from one of the private VPCs with a destination of the other private VPC are dropped.
 
 ### 3. Updating the private_access route table
 
