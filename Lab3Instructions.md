@@ -4,7 +4,7 @@ In Lab 3 we will be moving from a mesh architecture, where all VPCs can talk to 
 
 ![Lab3 Architecture](img/lab3.png)
 
-Note that you are now going to be working mostly back in the first account, and will only be using the second account for testing. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using firefox for account 1 and safari for account 2).
+Note that you are now going to be working mostly back in the first account, and will only be using the second account for testing. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using Firefox for account 1 and Safari for account 2).
 
 ---
 
@@ -15,24 +15,22 @@ Note that you are now going to be working mostly back in the first account, and 
 
 ## Moving to a hub and spoke architecture
 
-In order to move from a mesh to a hub and spoke architecture, we will need to create new route tables, and move all the associations and propagations from the existing one. It is important to note that whilst an attachment **can** be propagated to multiple route tables, it **cannot** be associated with more than one. As such, if you try to associate an attachment with a new route table before disassocciating it from the existng one, the operation will fail.
+In order to move from a mesh to a hub and spoke architecture, we will need to create new route tables, and move all the associations and propagations from the existing one. It is important to note that whilst an attachment **can** be propagated to multiple route tables, it **cannot** be associated with more than one. As such, if you try to associate an attachment with a new route table before disassocciating it from the existing one, the operation will fail.
 
-### 1. Creating new transit gateway route tables
+### 1. Creating new Transit Gateway route tables
 
-* Create a tgw route table called `boundary_access` which will be used by the private VPCs to access the boundary VPC
-* Create a tgw route table called `private_access` which will be used by the boundary VPC to access the private VPCs
-* Remove all associations from the original mesh route table. Propagations can stay if you want, as they have no affect if the route table is not being used.
+* Create a TGW route table called `boundary_access` which will be used by the private VPCs to access the boundary VPC.
+* Create a TGW route table called `private_access` which will be used by the boundary VPC to access the private VPCs.
+* Remove all associations from the original mesh route table. Propagations can stay if you want, as they have no effect if the route table is not being used.
 
 ### 2. Updating the boundary_access route table
 
-* Associate the two private VPCs with the `boundary_access` route table. Remember, associating the attachment to a table tells the transit gateway that this table is used for making route decisions on packets **coming in** to that attachment from a VPC
-
+* Associate the two private VPCs with the `boundary_access` route table. Remember, associating the attachment to a table tells the Transit Gateway that this table is used for making route decisions on packets **coming in** to that attachment from a VPC.
 * Propagate the boundary VPC attachment into the `boundary_access` route table, so that packets from the private VPCs know how to get to the `192.168.0.0/16` range
-
 * Add a default route into the `boundary_access` route table so that packets coming in from the private VPCs, with destinations on the Internet, know to be forwarded via the NAT gateway
 
 > [!TIP]
-> The propagation of the boundary VPC into the `boundary_access` route table is not strictly needed, as the default route would do that job anyway. However, it's worth adding, just so you know its there... not all solutions for customers will be for access to everything. Sometimes, they will use this architecture to create shared services VPCs instead.
+> The propagation of the boundary VPC into the `boundary_access` route table is not strictly needed, as the default route would do that job anyway. However, it's worth adding, just so you know its there. Not all solutions for customers will be for access to everything. Sometimes, they will use this architecture to create shared services VPCs instead.
 
 * Add a **blackhole route** to the `boundary_access` route table, so that packets coming from one of the private VPCs with a destination of the other private VPC are dropped.
 

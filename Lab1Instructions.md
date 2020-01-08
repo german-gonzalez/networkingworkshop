@@ -8,36 +8,38 @@ In lab 1 we will be deploying a transit gateway, and linking two VPCs together, 
 
 ### 1. Create a keypair in eu-west-1, account 1
 
-You wont need the keypair unless you want to ssh directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
+You won't need the keypair unless you want to ssh directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
 
-Unless you already have used the name, give this keypair the name `KeyPair` to match the entry in the cloudformation template.
+Unless you already have used the name, give this keypair the name `KeyPair` to match the entry in the CloudFormation template.
 
-### 2. Launch the cloudformation template
+### 2. Launch the CloudFormation template
 
 Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
 
-To download the cloudformation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml)
+To download the cloudformation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml).
 
-To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/f1a82d39db4589c2edef151497808caafedf632cdd2e67983e6bd3f60ede19e8)
+To download the template from workdocs [click here.](https://amazon.awsapps.com/workdocs/index.html#/document/f1a82d39db4589c2edef151497808caafedf632cdd2e67983e6bd3f60ede19e8)
+
+The creation of the resources will take around 5 minutes. 
 
 ### 3. Checking the launched stack
 
 Once complete, check the following:
 
-* your stack has created 2 VPCs, 3 subnets, 5 instances and an IAM role for SSM, which will include the characters `ssm`.
+* Your stack has created 2 VPCs, 3 subnets, 5 instances and an IAM role for SSM, which will include the characters `ssm`.
 
-* in Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
+* In Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
 
-* connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results. 
+* Connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results. 
 
 All instances in the `192.168.0.0/16` range should be able to ping one another, but the instance in the `10.0.1.0/24` range should be unreachable.
 
 Also, the `curl` command should work from all instances except `192.168.1.100` and `10.0.1.100`
 
 > [DANGER]
-> Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a nitro card to act as source. 
+> Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a Nitro card to act as source. 
 
-> We have put an instance in the public subnet purely to act as a testing point...something you can ping from. This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
+> We have put an instance in the public subnet purely to act as a testing point (something you can ping from). This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
 
 ---
 
@@ -75,15 +77,15 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ### 5. Test everything
 
-Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using session manager, and see what can ping to what, and which instances are able to reach the internet.
+Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using Session Manager, and see what can ping to what, and which instances are able to reach the internet.
 
 If the lab is working correctly, then everything should be able to ping everything else, and all instances should be able to connect to the Internet, with the exception of `192.168.1.100`.
 
 ## What if I can't get lab 1 working?
 
-If you have tried to create the transit gateway, and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, transit gateway, attachments, and cloudformation stack) and then run a single cloudformation template which will create the entire lab, including all transit gateway components.
+If you have tried to create the Transit Gateway, and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, Transit Gateway, attachments, and CloudFormation stack) and then run a single CloudFormation template which will create the entire lab, including all Transit Gateway components.
 
-This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the cloudformation template for deploying a complete lab 1, including the transit gateway [here](https://d2x18vu72ugj64.cloudfront.net/Lab1Complete_withTGW.yaml)
+This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the CloudFormation template for deploying a complete lab 1, including the Transit Gateway [here](https://d2x18vu72ugj64.cloudfront.net/Lab1Complete_withTGW.yaml) .
 
-To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/e694199480f4b861a6b1d6c3cb058444daed513a89cde170c081c29ab3425bea)
+To download the template from WorkDocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/e694199480f4b861a6b1d6c3cb058444daed513a89cde170c081c29ab3425bea) .
 
