@@ -90,7 +90,9 @@ Testing in step 1 above proves that the traffic capture is working, but it would
 
         sudo tcpdump -nni vxlan0 
 
-For more information and payload detail, you can add `-vnni`, `-vvnni` and `-vvvnni` to the command, instead of `-nni`. This should go down to the level of outputting the actual html header and payload information within the packet.
+For more information and payload detail, you can add `-vnni`, `-vvnni` and `-vvvnni` to the command, instead of `-nni`. This should go down to the level of outputting the actual html header and payload information within the packet. 
 
 >[!DANGER]
 >This is also a good reason why you should never use `http` any more! Anyone with packet capture capability can see the contents of your request!
+
+End of lab.
