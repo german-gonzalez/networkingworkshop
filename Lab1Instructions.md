@@ -82,7 +82,7 @@ If the lab is working correctly, then everything should be able to ping everythi
 
 ## What if I can't get lab 1 working?
 
-If you have tried to create the transit gateway,and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, transit gateway, aattachments, and cloudformation stack) and then run a single cloudformation template which will create the entire lab, including all transit gateway components.
+If you have tried to create the transit gateway, and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, transit gateway, attachments, and cloudformation stack) and then run a single cloudformation template which will create the entire lab, including all transit gateway components.
 
 This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the cloudformation template for deploying a complete lab 1, including the transit gateway [here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab1Complete_withTGW.yaml)
 

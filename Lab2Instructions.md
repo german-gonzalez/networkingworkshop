@@ -59,6 +59,11 @@ Nothing should be able to reach the instance in the `10.1.1.0/24` range, and lik
 
 * Accept the share in the second account. Until you explicitly do this, it will not be available for you. Once accepted, you should see a new transit gateway in account 2, without a name. Give it one if you want to.
 
+> [!TIP]
+> If you enabled auto-accept attachments when you created the transit gateway, then all should work fine. 
+
+> However, if you didn't enable it, then once you have shared the transit gateway with the second account, and created the attachment in the second account, you will need to go back to the first account and `accept` the attachment.
+
 ### 2. Create an attachment to the new VPC
 
 * Create the attachment to Private VPC2 in account 2. You will need to be in account 2 do do this, since the new VPC is owned by that account. However, you will notice that there are no routing tables in account 2, and you cannot create one. This is because the route table is owned by the transit gateway, which in turn is owned by account 1

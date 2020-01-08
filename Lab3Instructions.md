@@ -15,7 +15,7 @@ Note that you are now going to be working mostly back in the first account, and 
 
 ## Moving to a hub and spoke architecture
 
-In order to move from a mesh to a hub and spoke architecture, we will need to create new route tables, and move all the associations and propagations from the existing one. It is important to note that whilst an attachment **can** be propagated to multiple route tables, it **cannot** be associated with more than one. As such, if you try to associate an attachment with a new route table before disocciating it from the exisitng one, the operation will fail.
+In order to move from a mesh to a hub and spoke architecture, we will need to create new route tables, and move all the associations and propagations from the existing one. It is important to note that whilst an attachment **can** be propagated to multiple route tables, it **cannot** be associated with more than one. As such, if you try to associate an attachment with a new route table before disassocciating it from the existng one, the operation will fail.
 
 ### 1. Creating new transit gateway route tables
 

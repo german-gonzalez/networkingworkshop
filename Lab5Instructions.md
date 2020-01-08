@@ -5,7 +5,7 @@ In this lab we look at mirroring traffic that is coming in/out of the NAT instan
 ![Lab5 Architecture](img/lab5.png)
 
 >[!TIP]
->Note that you are now going to be working  back in the first account in **eu-west-1**. You can do all testing from instances within that region and account. We are testing traffic mirroring in this lab, and do not really need to worry about other VPCs or regions. All testing can be done with just the intances in the `192.168.0.0/16` boudary VPC
+>Note that you are now going to be working  back in the first account in **eu-west-1**. You can do all testing from instances within that region and account. We are testing traffic mirroring in this lab, and do not really need to worry about other VPCs or regions. All testing can be done with just the instances in the `192.168.0.0/16` boundary VPC
 
 ---
 
@@ -23,7 +23,7 @@ One of the instances created has two interfaces, with the first interface addres
 
 Then, within VPC -> Traffic Mirroring, set this interface up as a mirror target. 
 
-We are seperating the two interfaces out on the mirror target instance so that we are not confused between traffic arriving on the mirror target (interface 2) and traffic between the interface and SSM for remote access (interface 1)
+We are separating the two interfaces out on the mirror target instance so that we are not confused between traffic arriving on the mirror target (interface 2) and traffic between the interface and SSM for remote access (interface 1)
 
 ### 2. Creating the mirror filter
 
@@ -41,7 +41,7 @@ Once the target instance and mirror filter are created, then the mirror session 
 
 * Target is the mirror target set up in step 1 above
 
-* Session ID is 1 (when running multiple miror sessions, each one has to have a unique ID)
+* Session ID is 1 (when running multiple mirror sessions, each one has to have a unique ID)
 
 * VNI is a VXLAN label (similar to a VLAN tag) and can be set to 1111 (we will need this later)
 
@@ -64,7 +64,7 @@ Initially, we will just check the mirror is working, and then we can improve the
 
     This outputs to screen a list of all packets being received or transmitted on the second interface. There should be a mix of traffic, related to general network chatter (dns resolution, tcp session updates for SSM etc) and the mirror packets (VXLAN on port `4789`)
 
-* Generate traffic, initally by pinging `192.168.1.200` from `192.168.2.100`. This shouldn't actually show any traffic on the traffic mirror, since the mirror filter is set to only monitor `http` traffic.
+* Generate traffic, initially by pinging `192.168.1.200` from `192.168.2.100`. This shouldn't actually show any traffic on the traffic mirror, since the mirror filter is set to only monitor `http` traffic.
 
 * Now generate `http` traffic by using the command 
 
@@ -74,7 +74,7 @@ Initially, we will just check the mirror is working, and then we can improve the
 
 ### 2. Refining the traffic capture
 
-Testing in step 1 above proves that the traffic capture is working, but it would be better if we could seperate out the incoming `VXLAN` traffic from general network chatter. This is possible on Linux by creating a virtual interface, and telling the physical interface to redirect all traffic with a specific `VXLAN` encapsulation ID to that virtual interface. The commands are as follows:
+Testing in step 1 above proves that the traffic capture is working, but it would be better if we could separate out the incoming `VXLAN` traffic from general network chatter. This is possible on Linux by creating a virtual interface, and telling the physical interface to redirect all traffic with a specific `VXLAN` encapsulation ID to that virtual interface. The commands are as follows:
 
 * Set up the new interface
 
@@ -90,7 +90,7 @@ Testing in step 1 above proves that the traffic capture is working, but it would
 
         sudo tcpdump -nni vxlan0 
 
-For more information and payload detail, you can add `-vnni`, `-vvnni` and `-vvvnni` to the command, instead of `-nni`. This should go down to the level of outputing the actual html header and payload information within the packet.
+For more information and payload detail, you can add `-vnni`, `-vvnni` and `-vvvnni` to the command, instead of `-nni`. This should go down to the level of outputting the actual html header and payload information within the packet.
 
 >[!DANGER]
 >This is also a good reason why you should never use `http` any more! Anyone with packet capture capability can see the contents of your request!

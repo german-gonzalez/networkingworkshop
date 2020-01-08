@@ -53,9 +53,9 @@ The instance should not be able to reach any others, nor communicate with the In
 
 ### 1. Create the transit gateway peer attachment
 
-* In **us-east-1** find the new transit gateway created by the preperation cloudformation stack, and copy its tgw-ID
+* In **us-east-1** find the new transit gateway created by the preparation cloudformation stack, and copy its tgw-ID
 * In **eu-west-1** create a new attachment for the transit gateway of type `peer`, and point it towards the transit gateway that has just been created in **us-east-1**. You will need to enter the region, and then the specific tgw-ID that you captured in the previous step.
-* Go back to **us-east-1** then select, and accept the peering attachement. This may take a minute or so to appear, and then several minutes to move from `initiating` to `pending` to `attached`. 
+* Go back to **us-east-1** then select, and accept the peering attachment. This may take a minute or so to appear, and then several minutes to move from `initiating` to `pending` to `attached`. 
 
     *You need to specifically go to the details of the attachment in **us-east-1** in order to accept the attachment.*
 
