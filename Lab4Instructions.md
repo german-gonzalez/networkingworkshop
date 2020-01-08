@@ -28,7 +28,7 @@ To find the profile, go to the cloudformation stack in the first region, that yo
 
 Launch template `Lab4_Region2Acct1.yaml` and use the default entries, bearing in mind the items below.
 
-To download the cloudformation template for setting up lab 4, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab4_Region2Acct1.yaml)
+To download the cloudformation template for setting up lab 4, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab4_Region2Acct1.yaml)
 
 To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/d9911eac05eeb217ec174cd141b1bb4fffb40777b9986f3a2b2b978882e12e07)
 

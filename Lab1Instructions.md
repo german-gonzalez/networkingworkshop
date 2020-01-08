@@ -16,7 +16,7 @@ Unless you already have used the name, give this keypair the name `KeyPair` to m
 
 Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
 
-To download the cloudformation template for setting up lab 1, [click here](https://networking-workshop.s3-eu-west-1.amazonaws.com/Lab1_Region1Acct1.yaml)
+To download the cloudformation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml)
 
 To download the template from workdocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/f1a82d39db4589c2edef151497808caafedf632cdd2e67983e6bd3f60ede19e8)
 
@@ -38,7 +38,6 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 > Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a nitro card to act as source. 
 
 > We have put an instance in the public subnet purely to act as a testing point...something you can ping from. This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
-
 
 ---
 
