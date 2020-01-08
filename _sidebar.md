@@ -1,7 +1,7 @@
 - [Welcome](init.md)
 - Lab 1
 
-  - [Building a transit gateway](Lab1Instructions.md)
+  - [Building a Transit Gateway](Lab1Instructions.md)
 
 - Lab 2
 

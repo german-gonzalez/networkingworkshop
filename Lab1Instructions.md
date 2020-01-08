@@ -43,7 +43,7 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ---
 
-## Building the transit gateway
+## Building the Transit Gateway
 
 ### 1. Create the transit gateway
 
