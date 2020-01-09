@@ -14,5 +14,5 @@ As such, the final architecture will look like this
 
 This workshop is intended to be run in conjunction with presentation slides, as multiple modules.
 
-Also, at the beginning of each module, there will be a level of setting up needed that uses a cloudformation script to create the environment. Please make sure you are able to launch cloudformation scripts in your account, and if it is a brand new account, be aware that it may take 30 minutes or so for this function to become active.
+Also, at the beginning of each module, there will be a level of setting up needed that uses a CloudFormation script to create the environment. Please make sure you are able to launch CloudFormation scripts in your account, and if it is a brand new account, be aware that it may take 30 minutes or so for this function to become active.
 
