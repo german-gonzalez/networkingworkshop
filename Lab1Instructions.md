@@ -55,7 +55,7 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ### 2. Create Transit Gateway attachments
 
-* Create attachments in both the boundary and private VPCs
+* Create attachments in both the boundary and private VPCs. Add a name tag for easier identification in future tasks.
 * Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24` and named `PrivateNATSubnet-BoundaryVPC`. 
 
 ### 3. Create and populate the Transit Gateway route table
@@ -74,7 +74,7 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ### 4. Update VPC route tables
 
-* Add a **default route** to the Private VPC route table, pointing to the Transit Gateway.
+* Add a **default route** to the Private VPC `(PrivateVPC1RT-PrivateVPC1)` route table, pointing to the Transit Gateway.
 * Add a route to the boundary VPC **public** route table, pointing to the Transit Gateway for the CIDR range `10.0.0.0/8`. If you want to use the more explicit `10.0.0.0/16` route, you can, but it will mean adding an additional route in a later Lab.
 
 ### 5. Test everything
