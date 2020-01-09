@@ -16,9 +16,7 @@ Unless you already have used the name, give this keypair the name `KeyPair` to m
 
 Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
 
-To download the cloudformation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml).
-
-To download the template from workdocs [click here.](https://amazon.awsapps.com/workdocs/index.html#/document/f1a82d39db4589c2edef151497808caafedf632cdd2e67983e6bd3f60ede19e8)
+To download the CloudFormation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml).
 
 The creation of the resources will take around 5 minutes. 
 
@@ -87,5 +85,5 @@ If you have tried to create the Transit Gateway, and are just not able to get th
 
 This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the CloudFormation template for deploying a complete lab 1, including the Transit Gateway [here](https://d2x18vu72ugj64.cloudfront.net/Lab1Complete_withTGW.yaml) .
 
-To download the template from WorkDocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/e694199480f4b861a6b1d6c3cb058444daed513a89cde170c081c29ab3425bea) .
+
 

@@ -28,9 +28,7 @@ To find the profile, go to the CloudFormation stack in the first region, that yo
 
 Launch template `Lab4_Region2Acct1.yaml` and use the default entries, bearing in mind the items below.
 
-To download the CloudFormation template for setting up lab 4, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab4_Region2Acct1.yaml)
-
-To download the template from WorkDocs [click here](https://amazon.awsapps.com/workdocs/index.html#/document/d9911eac05eeb217ec174cd141b1bb4fffb40777b9986f3a2b2b978882e12e07)
+To download the CloudFormation template for setting up lab 4, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab4_Region2Acct1.yaml) .
 
 * If you have not named your keypair `KeyPair3` then change this parameter so it matches the name you provided.
 * Paste in the name of the SSM profile that you found from the CloudFormation output in Lab 1. **Note: you are looking for the profile, not the role.**
