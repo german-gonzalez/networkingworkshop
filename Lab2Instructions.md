@@ -76,7 +76,7 @@ Nothing should be able to reach the instance in the `10.1.1.0/24` range, and lik
 
 * Add a **default route** to the Private VPC 2 route table `(PrivateVPC2RT-PrivateVPC2 in account 2)`, pointing to the Transit Gateway. 
 
-*You do not need to update the route table in the boundary VPC if you used the range `10.0.0.0/8` for the route to private VPCs. However, if you used the more explicit `10.0.0.0/16` route, then you will also need to add the `10.1.0.0/16` route to the boundary VPC route table.
+* You do not need to update the route table in the boundary VPC if you used the range `10.0.0.0/8` for the route to private VPCs. However, if you used the more explicit `10.0.0.0/16` route, then you will also need to add the `10.1.0.0/16` route to the boundary VPC route table.
 
 ### 5. Test everything
 
