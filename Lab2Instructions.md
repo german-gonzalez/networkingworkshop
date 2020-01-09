@@ -66,7 +66,7 @@ Nothing should be able to reach the instance in the `10.1.1.0/24` range, and lik
 
 * Create the attachment to Private VPC2 in account 2. You will need to be in account 2 do do this, since the new VPC is owned by that account. However, you will notice that there are no routing tables in account 2, and you cannot create one. This is because the route table is owned by the Transit Gateway, which in turn is owned by account 1.
 
-### 3. Update the transit gateway route table
+### 3. Update the Transit Gateway route table
 
 * Back in account 1, associate the new attachment with the main route table you created in Lab 1
 
