@@ -56,7 +56,7 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 ### 2. Create Transit Gateway attachments
 
 * Create attachments in both the boundary and private VPCs
-* Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24`
+* Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24` and named `PrivateNATSubnet-BoundaryVPC`. 
 
 ### 3. Create and populate the Transit Gateway route table
 
