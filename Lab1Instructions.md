@@ -8,7 +8,7 @@ In lab 1 we will be deploying a Transit Gateway, and linking two VPCs together, 
 
 ### 1. Create a keypair in eu-west-1, account 1
 
-You won't need the keypair unless you want to ssh directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
+[Create a keypair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair). You won't use it unless you want to SSH directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
 
 Unless you already have used the name, give this keypair the name `KeyPair` to match the entry in the CloudFormation template.
 
