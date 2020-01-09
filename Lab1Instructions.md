@@ -1,6 +1,6 @@
 ## Overview of architecture
 
-In lab 1 we will be deploying a transit gateway, and linking two VPCs together, as shown in the diagram below:
+In lab 1 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
 
 ![Lab1 Architecture](img/lab1.png)
 
@@ -43,23 +43,23 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ## Building the Transit Gateway
 
-### 1. Create the transit gateway
+### 1. Create the Transit Gateway
 
 * Give it the AS number `65000`
 * **Enable** DNS support and auto-accept shared connections
 * **Disable** default association and propagation
 
-### 2. Create transit gateway attachments
+### 2. Create Transit Gateway attachments
 
 * Create attachments in both the boundary and private VPCs
 * Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24`
 
-### 3. Create and populate the transit gateway route table
+### 3. Create and populate the Transit Gateway route table
 
 * Create a main route table, with a name like `MeshRouteTable`
 * Associate both attachments with that route table
 * Either propagate both attachments to that route table, or enter routes in the table for the appropriate VPC CIDR ranges
-* Add a **default route** to the transit gateway route table, pointing to the boundary VPC attachment
+* Add a **default route** to the Transit Gateway route table, pointing to the boundary VPC attachment
 
 > [!TIP]
 > A default route is a route entry that tells a routing table 'if you don't have a specific match for this packet, then send it on this way'. The standard way of expressing a default route in IP is to set the route to 0.0.0.0/0, and point this towards the next hop where you want the packet to go.
@@ -70,8 +70,8 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ### 4. Update VPC route tables
 
-* Add a **default route** to the Private VPC route table, pointing to the transit gateway
-* Add a route to the boundary VPC **public** route table, pointing to the transit gateway for the CIDR range `10.0.0.0/8`. If you want to use the more explicit `10.0.0.0/16` route, you can, but it will mean adding an additional route in a later Lab.
+* Add a **default route** to the Private VPC route table, pointing to the Transit Gateway.
+* Add a route to the boundary VPC **public** route table, pointing to the Transit Gateway for the CIDR range `10.0.0.0/8`. If you want to use the more explicit `10.0.0.0/16` route, you can, but it will mean adding an additional route in a later Lab.
 
 ### 5. Test everything
 
