@@ -26,11 +26,12 @@ Once complete, check the following:
 
 * Your stack has created 2 VPCs, 3 subnets, 5 instances and an IAM role for SSM, which will include the characters `ssm`.
 
-> [NOTE] 
->
-> We will not be using the TrafficMirrorTargetInstance until Lab5. 
-
 * In Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
+
+  > [NOTE]
+  >
+  > We will not be using the TrafficMirrorTargetInstance until Lab5. 
+
 * Connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results.  
 
 All instances in the `192.168.0.0/16` range should be able to ping one another, but the instance in the `10.0.1.0/24` range should be unreachable.
