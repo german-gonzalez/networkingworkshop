@@ -28,9 +28,9 @@ Once complete, check the following:
 
 * In Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
 
-  > [NOTE]
-  >
-  > We will not be using the TrafficMirrorTargetInstance until Lab5. 
+>[NOTE]
+>
+>We will not be using the TrafficMirrorTargetInstance until Lab5. 
 
 * Connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results.  
 
@@ -49,9 +49,9 @@ Also, the `curl` command should work from all instances except `192.168.1.100` a
 
 ### 1. Create the Transit Gateway
 
-* Give it the AS number `65000`
-* **Enable** DNS support and auto-accept shared connections
-* **Disable** default association and propagation
+* Give it the AS number `65000`.
+* **Enable** DNS support and auto-accept shared attachments.
+* **Disable** default route table association and default route table propagation.
 
 ### 2. Create Transit Gateway attachments
 
