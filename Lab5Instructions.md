@@ -29,9 +29,9 @@ We are separating the two interfaces out on the mirror target instance so that w
 
 In order to capture traffic, we need to define a filter so that not all traffic is mirrored. Whilst it is possible to mirror all traffic, for our purposes, we are only trying to see what `http` traffic is sent to and from the NAT instance.
 
-To do this, the filter needs to be configured so that inbound traffic (to the NAT instance) has a destination port of `80` and outbound traffic (returning to the private instance) has a source port of `80`. 
+To do this, the filter needs to be configured so that inbound traffic (to the NAT instance) has a destination port of `80` and outbound traffic (returning to the private instance) has a source port of `80`. For source and destination CIDR blocks, you can use `0.0.0.0/0` to match any source and destination IPs.
 
-We don't try and view outbound traffic with destination port `80` as this would just be the request coming in to the NAT instance, being forwarded on to the Internet. The same is true of inbound traffic with a source port of `80`.
+We don't try and view outbound traffic with destination port `80` as this would just be the request coming in to the NAT instance, being forwarded on to the Internet. The same is true of inbound traffic with a source port of `80`.   
 
 ### 3. Setting up the mirror session
 
@@ -57,7 +57,7 @@ Initially, we will just check the mirror is working, and then we can improve the
 
 ### 1. Checking the mirroring is working
 
-* Start an SSM session to both instances (`192.168.2.100` and `192.168.2.111`)
+* Start an SSM session to both instances (`PrivateNATSubnet-TestInstance` and `TrafficMirrorTargetInstance`).
 * view the traffic coming in on the second interface of the traffic mirror instance. This can be done using the command:
 
         sudo tcpdump -nni eth1
@@ -69,7 +69,7 @@ Initially, we will just check the mirror is working, and then we can improve the
 * Now generate `http` traffic by using the command 
 
         curl amazon.co.uk
-    
+
     from the test instance (`192.168.2.100`). At this point, you should see significant traffic packets being shown on the mirror target instance, marked with destination port `4789` and potentially tagged as `VXLAN` as Linux is taking its best guess as to the type of traffic.
 
 ### 2. Refining the traffic capture
