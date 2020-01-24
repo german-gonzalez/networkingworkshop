@@ -1,23 +1,31 @@
 - [Welcome](init.md)
 - Lab 1
 
-  - [Building a Transit Gateway](Lab1Instructions.md)
+  - [Building a VPC with private and public subnets](Lab1Instructions.md)
 
 - Lab 2
 
-  - [Adding a second account](Lab2Instructions.md)
+  - [Adding a second VPC, and peering it to the first](Lab2Instructions.md)
 
 - Lab 3
 
-  - [Moving to a hub and spoke desgin](Lab3Instructions.md)
+  - [Building a Transit Gateway](Lab3Instructions.md)
 
 - Lab 4
 
-  - [Peering with a second region](Lab4Instructions.md)
+  - [Adding a second account](Lab4Instructions.md)
 
 - Lab 5
 
-  - [Packet Inspection with Traffic Mirroring](Lab5Instructions.md)
+  - [Moving to a hub and spoke desgin](Lab5Instructions.md)
+
+- Lab 6
+
+  - [Peering with a second region](Lab6Instructions.md)
+
+- Lab 9
+
+  - [Packet Inspection with Traffic Mirroring](Lab9Instructions.md)
 
 - Additional Material
 

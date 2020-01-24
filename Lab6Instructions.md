@@ -2,7 +2,7 @@
 
 In this lab, we will look at how to peer two transit gateways together in different regions.
 
-![Lab4 Architecture](img/lab4.png)
+![Lab4 Architecture](img/lab6.png)
 
 ## Preparing the environment
 

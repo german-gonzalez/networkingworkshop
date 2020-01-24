@@ -1,8 +1,8 @@
 ## Overview of architecture
 
-In Lab 3 we will be moving from a mesh architecture, where all VPCs can talk to one another, to a hub and spoke architecture, where several spoke VPCs can talk to a hub VPC, but not to each other.
+In Lab 5 we will be moving from a mesh architecture, where all VPCs can talk to one another, to a hub and spoke architecture, where several spoke VPCs can talk to a hub VPC, but not to each other.
 
-![Lab3 Architecture](img/lab3.png)
+![Lab5 Architecture](img/lab5.png)
 
 Note that you are now going to be working mostly back in the first account, and will only be using the second account for testing. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using Firefox for account 1 and Safari for account 2).
 
@@ -11,7 +11,7 @@ Note that you are now going to be working mostly back in the first account, and 
 ## Preparing the environment
 
 > [!TIP]
-> As long as lab 2 is working successfully for you, then there is no preparation for lab 3.
+> As long as lab 4 is working successfully for you, then there is no preparation for lab 5.
 
 ## Moving to a hub and spoke architecture
 

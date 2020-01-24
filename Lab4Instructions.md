@@ -1,8 +1,8 @@
 ## Overview of architecture
 
-In Lab 2, we will be adding another VPC, but from a different account
+In Lab 4, we will be adding another VPC, but from a different account
 
-![Lab2 Architecture](img/lab2.png)
+![Lab4 Architecture](img/lab4.png)
 
 
 Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using Firefox for account 1 and Safari for account 2). Another option is to use [Multi-Account Containers for Firefox](https://github.com/mozilla/multi-account-containers#readme) . 

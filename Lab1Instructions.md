@@ -1,6 +1,10 @@
 ## Overview of architecture
 
-In lab 1 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
+In lab 1 we will be deploying a VPC, creating 2 subnets, adding instances and a NAT gateway, and setting up routing tables to define public and private subnets.
+
+We will also look at an alternative way to access your instances, via systems manager.
+
+The architecture is shown in the diagram below:
 
 ![Lab1 Architecture](img/lab1.png)
 
@@ -12,40 +16,9 @@ In lab 1 we will be deploying a Transit Gateway, and linking two VPCs together, 
 
 Unless you already have used the name, give this keypair the name `KeyPair` to match the entry in the CloudFormation template.
 
-### 2. Launch the CloudFormation template
-
-Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
-
-To download the CloudFormation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml).
-
-The creation of the resources will take around 5 minutes. 
-
-### 3. Checking the launched stack
-
-Once complete, check the following:
-
-* Your stack has created 2 VPCs, 3 subnets, 5 instances and an IAM role for SSM, which will include the characters `ssm`.
-
-* In Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
-
->[NOTE]
->
->We will not be using the TrafficMirrorTargetInstance until Lab5. 
-
-* Connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results.  
-
-All instances in the `192.168.0.0/16` range should be able to ping one another, but the instance in the `10.0.1.0/24` range should be unreachable.
-
-Also, the `curl` command should work from all instances except `192.168.1.100` and `10.0.1.100`
-
-> [DANGER]
-> Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a Nitro card to act as source. 
-
-> We have put an instance in the public subnet purely to act as a testing point (something you can ping from). This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
-
 ---
 
-## Building the Transit Gateway
+## Building the environment
 
 ### 1. Create the Transit Gateway
 

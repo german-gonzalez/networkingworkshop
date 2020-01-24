@@ -1,8 +1,8 @@
 ## Overview of architecture
 
-In lab 1 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
+In lab 3 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
 
-![Lab1 Architecture](img/lab1.png)
+![Lab3 Architecture](img/lab3.png)
 
 ## Preparing the environment
 
