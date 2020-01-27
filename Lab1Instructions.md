@@ -20,47 +20,49 @@ Unless you already have used the name, give this keypair the name `KeyPair` to m
 
 ## Building the environment
 
-### 1. Create the Transit Gateway
+### 1. Create the VPC and associated components
 
-* Give it the AS number `65000`.
-* **Enable** DNS support and auto-accept shared attachments.
-* **Disable** default route table association and default route table propagation.
+In this section, you will need to select an CIDR range (use `10.x.0.0/16` for the VPC, where x is given to you by the presenter) and then configure the VPC with public and private subnets in that range. To do this, you will need to:
 
-### 2. Create Transit Gateway attachments
+- Create the VPC
+- Create the 2 subnets
+- Create route tables for each subnet (public and private)
+- Associate the subnets with the appropriate route tables
+- Create an Internet Gateway, and associate it with the VPC
+- Add a default route to the public subnet, via the IGW
 
-* Create attachments in both the boundary and private VPCs. Add a name tag for easier identification in future tasks.
-* Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24` and named `PrivateNATSubnet-BoundaryVPC`. 
+### 2. Create the NAT gateway and update route tables
 
-### 3. Create and populate the Transit Gateway route table
+In this section, you will need to create a NAT gateway and make it usable by the private subnet. To do this, you will need to:
 
-* Create a main route table, with a name like `MeshRouteTable`
-* Associate both attachments with that route table
-* Either propagate both attachments to that route table, or enter routes in the table for the appropriate VPC CIDR ranges
-* Add a **default route** to the Transit Gateway route table, pointing to the boundary VPC attachment
+- Create an Elastic IP, for use by the NAT gateway
+- Create the NAT gateway in the public subnet
+- Update the route table for the private subnet in order to point to the NAT gateway as its default route
 
-> [!TIP]
-> A default route is a route entry that tells a routing table 'if you don't have a specific match for this packet, then send it on this way'. The standard way of expressing a default route in IP is to set the route to 0.0.0.0/0, and point this towards the next hop where you want the packet to go.
+### 3. Create instances and test access
 
-> 0.0.0.0/0 means match with any possible address.
+Now we are ready to create 2 test instances, as follows:
 
-> It is important to remember that a routing table will always match to the most specific route first. The order of the routes in a routing table is usually just in numerical sequence, and the routing decision is based on which route has the best match. This does mean that when routing tables get quite large, a lot of checking has to be done, since every entry has to be validated, at least the first time a packet is routed.
+- Create the first instance in the public subnet, with a public IP, so that it can talk directly to the internet. 
+    - Use the keypair you previously created at the beginning of this lab.
+    - During creation, also create a security group that allows ssh inbound from the Internet
 
-### 4. Update VPC route tables
+- Create a second instance, in the private subnet. This instance will use the NAT gateway to talk to the Internet, and does not need a public IP address. 
+    - Again, use the keypair you created at the beginning of this lab.
+    - You should be able to use the previous security group created whilst making the first instance for ssh inbound
 
-* Add a **default route** to the Private VPC `(PrivateVPC1RT-PrivateVPC1)` route table, pointing to the Transit Gateway.
-* Add a route to the boundary VPC **public** route table, pointing to the Transit Gateway for the CIDR range `10.0.0.0/8`. If you want to use the more explicit `10.0.0.0/16` route, you can, but it will mean adding an additional route in a later Lab.
+### 4. Test everything
 
-### 5. Test everything
+Test access to the instances. You should be able to ssh directly to the instance in the public subnet, but how do you get to the instance in the private subnet?
 
-Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using Session Manager, and see what can ping to what, and which instances are able to reach the internet.
+Why wont the instances ping one another? How do you fix that?
 
-If the lab is working correctly, then everything should be able to ping everything else, and all instances should be able to connect to the Internet, with the exception of `192.168.1.100`.
+Can they both talk to the Internet?
+```
+curl amazon.co.uk
+```
 
-## What if I can't get lab 1 working?
-
-If you have tried to create the Transit Gateway, and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, Transit Gateway, attachments, and CloudFormation stack) and then run a single CloudFormation template which will create the entire lab, including all Transit Gateway components.
-
-This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the CloudFormation template for deploying a complete lab 1, including the Transit Gateway [here](https://d2x18vu72ugj64.cloudfront.net/Lab1Complete_withTGW.yaml) .
-
-
-
+What is your public IP?
+```
+curl ifconfig.me
+```
