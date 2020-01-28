@@ -2,6 +2,8 @@
 
 # Networking Workshop <small>0.2</small>
 
+> Under construction - not for customer use yet!!
+
 > VPCs, Subnets, Peering, Transit Gateways, VPNs and Traffic Mirroring 
 > - Labs and Instructions
 
