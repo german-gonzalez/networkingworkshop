@@ -51,6 +51,8 @@ Now we are ready to create 2 test instances, as follows:
     - Again, use the keypair you created at the beginning of this lab.
     - You should be able to use the previous security group created whilst making the first instance for ssh inbound
 
+It is also useful to add either ICMP to the ssh security groups, or even to create a new security group with ICMP in it, and add it to the instance. That way, you will allow ping traffic between instances
+
 ### 4. Test everything
 
 Test access to the instances. You should be able to ssh directly to the instance in the public subnet, but how do you get to the instance in the private subnet?
