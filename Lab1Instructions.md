@@ -92,3 +92,4 @@ There are several things that need to be in place for login to instances via sys
 You can also connect to an instance using the aws command line, if you have installed the plug-in on your computer.
 
 Once you log in to an instance, you can use the command `bash` and it will set the instance prompt to the IP address of the primary interface. This makes it easier to identify which instance you are looking at.
+
