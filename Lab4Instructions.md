@@ -2,7 +2,7 @@
 
 In lab 3 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
 
-![Lab3 Architecture](img/lab3.png)
+![Lab3 Architecture](img/lab4.png)
 
 ## Preparing the environment
 

@@ -2,7 +2,7 @@
 
 In Lab 5 we will be moving from a mesh architecture, where all VPCs can talk to one another, to a hub and spoke architecture, where several spoke VPCs can talk to a hub VPC, but not to each other.
 
-![Lab5 Architecture](img/lab5.png)
+![Lab5 Architecture](img/lab6.png)
 
 Note that you are now going to be working mostly back in the first account, and will only be using the second account for testing. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using Firefox for account 1 and Safari for account 2).
 
