@@ -5,24 +5,32 @@
 
 - Lab 2
 
-  - [Adding a second VPC, and peering it to the first](Lab2Instructions.md)
+  - [Peering to a second VPC](Lab2Instructions.md)
 
 - Lab 3
 
-  - [Building a Transit Gateway](Lab3Instructions.md)
+  - [Connecting a VPN to on-premise (VGW)](Lab3Instructions.md)
 
 - Lab 4
 
-  - [Adding a second account](Lab4Instructions.md)
+  - [Building a Transit Gateway](Lab4Instructions.md)
 
 - Lab 5
 
-  - [Moving to a hub and spoke desgin](Lab5Instructions.md)
+  - [Adding a second account](Lab5Instructions.md)
 
 - Lab 6
 
-  - [Peering with a second region](Lab6Instructions.md)
+  - [Moving to a hub and spoke desgin](Lab6Instructions.md)
 
+- Lab 7
+
+  - [Peering with a second region](Lab7Instructions.md)
+
+- Lab 8
+
+  - [Connecting a VPN to on-premise (TGW)](Lab8Instructions.md)
+  
 - Lab 9
 
   - [Packet Inspection with Traffic Mirroring](Lab9Instructions.md)

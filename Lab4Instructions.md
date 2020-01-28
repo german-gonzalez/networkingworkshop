@@ -1,86 +1,93 @@
 ## Overview of architecture
 
-In Lab 4, we will be adding another VPC, but from a different account
+In lab 3 we will be deploying a Transit Gateway, and linking two VPCs together, as shown in the diagram below:
 
-![Lab4 Architecture](img/lab4.png)
-
-
-Note that you are now going to be working in a second account. Depending on your browser, you may need to either use a private (incognito) browser, or use a different browser (eg using Firefox for account 1 and Safari for account 2). Another option is to use [Multi-Account Containers for Firefox](https://github.com/mozilla/multi-account-containers#readme) . 
-
-Otherwise, you may find that when you log into account 2, it changes the account that all browsers in that session are logged in to. Keep an eye out for this!!!
-
----
+![Lab3 Architecture](img/lab3.png)
 
 ## Preparing the environment
 
-> [!DANGER]
-> You should now be working in account 2
+### 1. Create a keypair in eu-west-1, account 1
 
-### 1. Create a keypair in eu-west-1, account 2
+[Create a keypair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair). You won't use it unless you want to SSH directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
 
-You wont need the keypair unless you want to ssh directly into the instance, but you cannot launch the instance without a keypair. In these labs, we will mostly be using SSM Session Manager to access instances.
-
-Unless you already have used the name, give this keypair the name `KeyPair2` to match the entry in the cloudformation template.
+Unless you already have used the name, give this keypair the name `KeyPair` to match the entry in the CloudFormation template.
 
 ### 2. Launch the CloudFormation template
 
-Launch template `Lab2_Region1Acct2.yaml` and use the default entries. If you have not named your keypair `KeyPair2` then change this parameter so it matches the name you provided.
+Launch template `Lab1_Region1Acct1.yaml` and use the default entries. If you have not named your keypair `KeyPair` then change this parameter so it matches the name you provided.
 
-To download the CloudFormation template for setting up lab 2, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab2_Region1Acct2.yaml) .
+To download the CloudFormation template for setting up lab 1, [click here](https://d2x18vu72ugj64.cloudfront.net/Lab1_Region1Acct1.yaml).
+
+The creation of the resources will take around 5 minutes. 
 
 ### 3. Checking the launched stack
 
 Once complete, check the following:
 
-* Your stack has created 1 VPC, 1 subnet, 1 instance and an IAM role for SSM, which will include the characters `ssm`.
+* Your stack has created 2 VPCs, 3 subnets, 5 instances and an IAM role for SSM, which will include the characters `ssm`.
 
-* In Systems Manager -> Managed Instances, you can see the instance that was created, listed as being managed.
+* In Systems Manager -> Managed Instances, you can see the 5 instances that were created, listed as being managed.
 
-* Connect into each instance in both account 1 and account 2 via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an HTML header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results.
+>[NOTE]
+>
+>We will not be using the TrafficMirrorTargetInstance until Lab5. 
 
-All instances in the `192.168.0.0/16` range should be able to ping one another, as well as the instance in the `10.0.1.0/24` range.
+* Connect into each one via Systems Manager -> Session Manager, and try and ping all the others, as well as checking Internet access via the NAT instance. To do this, issue the command `curl amazon.co.uk` in Linux, which should respond with an html header. Use the provided [testing matrix](https://www.networking-workshop.com/#/testingmatrix) to record your results.  
 
-Also, the `curl` command should work from all instances except `192.168.1.100` 
+All instances in the `192.168.0.0/16` range should be able to ping one another, but the instance in the `10.0.1.0/24` range should be unreachable.
 
-Nothing should be able to reach the instance in the `10.1.1.0/24` range, and likewise, it should not be able to reach any other instances. Nor should it be able to reach the Internet.
+Also, the `curl` command should work from all instances except `192.168.1.100` and `10.0.1.100`
+
+> [DANGER]
+> Be aware that normal architecture should use a NAT gateway rather than a NAT instance. However, we want to do some traffic mirroring on the NAT instance in a later lab, and traffic mirroring currently requires an instance with a Nitro card to act as source. 
+
+> We have put an instance in the public subnet purely to act as a testing point (something you can ping from). This is not intended to be a web server, or have direct Internet access. That is why we have no public IP on it. Normally, you would either put a public IP on the instance, or better, for inbound traffic, use a load balancer pointing to an instance in a private subnet.
 
 ---
 
-## Extending the TGW to the new VPC
+## Building the Transit Gateway
+
+### 1. Create the Transit Gateway
+
+* Give it the AS number `65000`.
+* **Enable** DNS support and auto-accept shared attachments.
+* **Disable** default route table association and default route table propagation.
+
+### 2. Create Transit Gateway attachments
+
+* Create attachments in both the boundary and private VPCs. Add a name tag for easier identification in future tasks.
+* Make sure the attachment in the boundary VPC is placed in the **private** subnet, with IP range `192.168.2.0/24` and named `PrivateNATSubnet-BoundaryVPC`. 
+
+### 3. Create and populate the Transit Gateway route table
+
+* Create a main route table, with a name like `MeshRouteTable`
+* Associate both attachments with that route table
+* Either propagate both attachments to that route table, or enter routes in the table for the appropriate VPC CIDR ranges
+* Add a **default route** to the Transit Gateway route table, pointing to the boundary VPC attachment
 
 > [!TIP]
-> You will now be swapping between accounts 1 and 2. Pay attention to which account you are in as you go through the steps. 
+> A default route is a route entry that tells a routing table 'if you don't have a specific match for this packet, then send it on this way'. The standard way of expressing a default route in IP is to set the route to 0.0.0.0/0, and point this towards the next hop where you want the packet to go.
 
-### 1. Share the Transit Gateway
+> 0.0.0.0/0 means match with any possible address.
 
-* Using Resource Access Manager in account 1, share the Transit Gateway with account 2. These accounts do not need to be in the same Organization, and you can explicitly share the account, rather than at an OU or Organization level.
+> It is important to remember that a routing table will always match to the most specific route first. The order of the routes in a routing table is usually just in numerical sequence, and the routing decision is based on which route has the best match. This does mean that when routing tables get quite large, a lot of checking has to be done, since every entry has to be validated, at least the first time a packet is routed.
 
-* Accept the share in the second account. Until you explicitly do this, it will not be available for you. Once accepted, you should see a new Transit Gateway in account 2, without a name. Give it one if you want to.
+### 4. Update VPC route tables
 
-> [!TIP]
-> If you enabled auto-accept attachments when you created the Transit Gateway, then all should work fine. 
-
-> However, if you didn't enable it, then once you have shared the Transit Gateway with the second account, and created the attachment in the second account, you will need to go back to the first account and `accept` the attachment.
-
-### 2. Create an attachment to the new VPC
-
-* Create the attachment to Private VPC2 in account 2. You will need to be in account 2 do do this, since the new VPC is owned by that account. However, you will notice that there are no routing tables in account 2, and you cannot create one. This is because the route table is owned by the Transit Gateway, which in turn is owned by account 1.
-
-### 3. Update the Transit Gateway route table
-
-* Back in account 1, associate the new attachment with the main route table you created in Lab 1
-
-* Either propagate that attachment into the main route table, or add a route to the `10.1.1.0/24` range, directly into the route table. Either option will have the same effect.
-
-### 4. Update VPC route table
-
-* Add a **default route** to the Private VPC 2 route table `(PrivateVPC2RT-PrivateVPC2 in account 2)`, pointing to the Transit Gateway. 
-
-* You do not need to update the route table in the boundary VPC if you used the range `10.0.0.0/8` for the route to private VPCs. However, if you used the more explicit `10.0.0.0/16` route, then you will also need to add the `10.1.0.0/16` route to the boundary VPC route table.
+* Add a **default route** to the Private VPC `(PrivateVPC1RT-PrivateVPC1)` route table, pointing to the Transit Gateway.
+* Add a route to the boundary VPC **public** route table, pointing to the Transit Gateway for the CIDR range `10.0.0.0/8`. If you want to use the more explicit `10.0.0.0/16` route, you can, but it will mean adding an additional route in a later Lab.
 
 ### 5. Test everything
 
-Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using Session Manager (in both accounts), and see what can ping to what, and which instances are able to reach the internet.
+Use the same [testing matrix](https://www.networking-workshop.com/#/testingmatrix) as before, and log into each instance using Session Manager, and see what can ping to what, and which instances are able to reach the internet.
 
 If the lab is working correctly, then everything should be able to ping everything else, and all instances should be able to connect to the Internet, with the exception of `192.168.1.100`.
+
+## What if I can't get lab 1 working?
+
+If you have tried to create the Transit Gateway, and are just not able to get the lab working successfully, then the last option is to delete all the implementation you have done (eg, Transit Gateway, attachments, and CloudFormation stack) and then run a single CloudFormation template which will create the entire lab, including all Transit Gateway components.
+
+This is available as a template called `Lab1Complete_withTGW.yaml`, and only needs that you have created a keypair in order to run successfully. You can download the CloudFormation template for deploying a complete lab 1, including the Transit Gateway [here](https://d2x18vu72ugj64.cloudfront.net/Lab1Complete_withTGW.yaml) .
+
+
 
