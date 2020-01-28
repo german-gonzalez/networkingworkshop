@@ -66,3 +66,29 @@ What is your public IP?
 ```
 curl ifconfig.me
 ```
+
+---
+
+## Other ways to connect to instances
+
+One of the limitations of connecting to instances via their public address is that it either requires every instance to have a public address, or alternatively, you have to log into a jump box, and then jump from one instance to another.
+
+This is all very well if the network is working and established, but if you are trying to use the instances to check the network, then that becomes an issue! How do you ssh from one instance to another if the network isn't working yet.
+
+One of the easiest ways around this, and also a chance to learn a useful network tool, is to use privatelink endpoints. These put service network interfaces inside the VPC, and allow you to connect to services as if they are local to your CIDR. 
+
+We will use one of these to connect to the instances, using AWS Systems Manager.
+
+### 1. Setting up Systems Manager
+
+There are several things that need to be in place for login to instances via systems manager, and you will need to deploy these. You will need to do the following
+
+1. Create an instance profile, a role and a policy to apply to an instance. The easiest way to do this is through quick setup....you dont even need to identify an instance. just open quick setup, and it will create the instance profile for you
+2. create ssm and ssmmessages endpoints in the vpc, and apply default SG so that instances can talk to it
+3. wait for the endpoints to come alive
+4. launch an instance, and make sure it has the ssminstance role, and is in the default SG
+5. go to systems manager - session manager and start a session
+
+You can also connect to an instance using the aws command line, if you have installed the plug-in on your computer.
+
+Once you log in to an instance, you can use the command `bash` and it will set the instance prompt to the IP address of the primary interface. This makes it easier to identify which instance you are looking at.
