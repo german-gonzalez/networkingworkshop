@@ -5,6 +5,9 @@
 > ## Under construction 
 > ## not for customer use yet!!
 
+> ### This set of labs will be repopulated once the development is complete. 
+> ### For any questions contact us via emails below. Thanks
+
 > VPCs, Subnets, Peering, Transit Gateways, VPNs and Traffic Mirroring 
 > - Labs and Instructions
 
