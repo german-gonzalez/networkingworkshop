@@ -4,7 +4,7 @@
 
 # Login to the AWS Workshop portal
 
-To be able to access an AWS account, you will need a **participant hash** provided by the workshop owner at the time of delivery. Since this workshop requires 2 accounts, you will need 2 participant hashes and this means you will go through the following process twice. 
+To be able to access an AWS account, you will need a **participant hash** provided by the workshop owner at the time of delivery. Since this workshop requires 2 accounts, you will need **2 participant hashes** and this means you will go through the following process twice. 
 Connect to the portal by clicking the button or browsing to https://dashboard.eventengine.run/login.
 The following screen shows up:
 ![event_engine_screenshot_1](../_media/event-engine-initial-screen.png)
