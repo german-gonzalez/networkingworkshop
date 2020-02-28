@@ -1,5 +1,5 @@
 - [Welcome](init.md)
-  - [At an AWS sponsored event](at-aws-event-steps.md)
+  - [If you're at an AWS sponsored event](at-aws-event-steps.md)
 - Lab 1
 
   - [Building a Transit Gateway](Lab1Instructions.md)
