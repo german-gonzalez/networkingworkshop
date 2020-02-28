@@ -9,7 +9,7 @@
 - [Transit Gateway](https://tgw.networking-workshop.com)
 - VPC - Coming Soon! 
 
-[Get Started](init.md)
+[Transit Gateway](http://tgw.networking-workshop.com)
 
 <!-- background color -->
 
