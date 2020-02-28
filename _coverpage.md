@@ -6,11 +6,16 @@
 >
 > - Labs and Instructions
 
-- [Transit Gateway](https://tgw.networking-workshop.com)
-- VPC - Coming Soon! 
+
 
 [Transit Gateway](http://tgw.networking-workshop.com)
 
 <!-- background color -->
 
 ![color](#ffffff)
+
+[VPC - Coming Soon!]
+
+<!-- background color -->
+
+![color]()
