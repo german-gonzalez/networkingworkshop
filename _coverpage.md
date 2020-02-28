@@ -14,8 +14,9 @@
 
 ![color](#ffffff)
 
-[VPC - Coming Soon!]
+[VPC - Coming Soon!]()
 
 <!-- background color -->
 
-![color]()
+![color](#ffffff)
+
