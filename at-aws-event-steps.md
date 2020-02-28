@@ -1,6 +1,6 @@
 > [NOTE] 
 
-> Follow these instructions if you're doing this lab as part of an AWS sponsored event based on Event Engine. 
+> Follow these instructions if you're doing this lab as part of an AWS sponsored event based on Event Engine. If you're using your own accounts you can skip these steps.
 
 # Login to the AWS Workshop portal
 
