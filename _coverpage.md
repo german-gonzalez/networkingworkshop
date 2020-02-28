@@ -8,7 +8,7 @@
 
 
 
-[Transit Gateway](http://tgw.networking-workshop.com)
+[Transit Gateway](http://tgw.networking-workshop.com/#/README)
 
 <!-- background color -->
 
