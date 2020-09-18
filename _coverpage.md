@@ -10,6 +10,12 @@
 
 [Transit Gateway](http://tgw.networking-workshop.com/#/README)
 
+
+
+| <a href="https://aws.amazon.com/privacy/?nc1=f_pr">Privacy</a> \| <a href="https://aws.amazon.com/terms/?nc1=f_pr">Site Terms</a> \| © 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved. |
+| ------------------------------------------------------------ |
+
+
 <!-- background color -->
 ![color](#ffffff)
 
